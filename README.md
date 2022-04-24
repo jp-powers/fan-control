@@ -15,6 +15,15 @@ Due to how TrueNAS works, setting the script to start on boot needs to be perfor
 
 It might be possible to do this via the install/uninstall shell scripts but I didn't do much research into it as from what I can tell the other IPMI fan control scripts don't do anything like this either, so I kind of assume it's not a thing.
 
+# Tested Against
+
+My personal machines are as follows:
+pfSense - Supermicro X11SSH-LN4F in a Supermicro CSE-512F-350B chassis
+TrueNAS Core - Supermicro X10DRH-C in a Supermicro 36 3.5" + 2 2.5" chassis (not sure of exact model)
+Proxmox - Dell Poweredge R730xd
+
+Depending on yourself editing the config file appropriately should just work, but it was written to work against these systems and thus I can't guarantee it'll work against anything different.
+
 # Install / Uninstall
 
 Unzip everything into /root/fan-control
