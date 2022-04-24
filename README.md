@@ -18,9 +18,9 @@ It might be possible to do this via the install/uninstall shell scripts but I di
 # Tested Against
 
 My personal machines are as follows:
-pfSense - Supermicro X11SSH-LN4F in a Supermicro CSE-512F-350B chassis
-TrueNAS Core - Supermicro X10DRH-C in a Supermicro 36 3.5" + 2 2.5" chassis (not sure of exact model)
-Proxmox - Dell Poweredge R730xd
+1. pfSense - Supermicro X11SSH-LN4F in a Supermicro CSE-512F-350B chassis
+1. TrueNAS Core - Supermicro X10DRH-C in a Supermicro 36 3.5" + 2 2.5" chassis (not sure of exact model)
+1. Proxmox - Dell Poweredge R730xd
 
 Depending on yourself editing the config file appropriately should just work, but it was written to work against these systems and thus I can't guarantee it'll work against anything different.
 
