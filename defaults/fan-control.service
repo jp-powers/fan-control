@@ -1,0 +1,11 @@
+[Unit]
+Description=Fan Control
+
+[Service]
+Type=simple
+Restart=always
+ExecStart=/root/fan-control/fan-control.py
+WorkingDirectory=/root/fan-control/
+
+[Install]
+WantedBy=multi-user.target
