@@ -1,0 +1,87 @@
+#!/usr/local/bin/python3
+##
+## config_gen.py
+##
+## Purpose: create config file for fan-control.py to use
+##
+## Notes: All available options are listed so you can simply change commented lines. The only things that "require" changing values are the disks list, the CPU/HDD fan curves, and the hdd_panic values.
+
+from configparser import ConfigParser
+
+#Get the configparser object
+config_object = ConfigParser()
+
+# defining system info, including OS and hardware platform type
+config_object["system_info"] = {
+### system_os is the operating system this script is running on. Will determine how certain temperature detection is run.
+#    "system_os": "Proxmox",
+    "system_os": "TrueNAS",
+#    "system_os": "pfSense",
+## ipmi_type is the hardware platform. Will determine how ipmitool raw commands are executed.
+#    "ipmi_type": "iDRAC_Gen08",
+    "ipmi_type": "SM_X10",
+## single_zone is a boolean to define if the fan zones should be treated as linked or not. Depends on chassis/fan zone layout.
+    "single_zone": True,
+#    "single_zone": False,
+## disk_list is the list of disks to monitor. da# is FreeBSD based, sdX is debian based
+    "disks": ["da0", "da1", "da2", "da3", "da4", "da5", "da6", "da7", "da8", "da9", "da10", "da11", "da12", "da13"],
+#    "disks": ["sda", "sdb", "sdc", "sdd", "sde", "sdf", "sdg", "sdh", "sdi", "sdj"],
+}
+
+### Fan Curve(s)
+# left (the key) is detected temperate, right (the value) is the fan speed percentage
+config_object["fan_curve"] = {
+    "cpu": [
+        [0, 0],
+        [25, 20],
+        [35, 20],
+        [40, 25],
+        [45, 30],
+        [50, 40],
+        [60, 50],
+        [70, 60],
+        [80, 100],
+        [90, 100],
+        [100, 100],
+    ],
+    "hdd": [
+        [0, 0],
+        [25, 20],
+        [35, 25],
+        [40, 30],
+        [45, 35],
+        [50, 40],
+        [60, 50],
+        [70, 70],
+        [80, 80],
+        [90, 100],
+        [100, 100],
+    ],
+}
+
+# Desired maximum HDD temp, and how much fan speed percentage to add if reached
+config_object["hdd_panic"] = {
+    "max_temp": 42,
+    "panic_addition": 15
+}
+
+# timers, in seconds, for how frequently to check the temperatures and adjust fan speeds if needed
+config_object["detect_timers"] = {
+    "cpu_timer": 1,
+    "hdd_timer": 30
+}
+
+# Logging configuration
+config_object["log_config"] = {
+    "file_name": "/root/fan-control/fan-control.log",
+    "format": '%%(asctime)s %%(levelname)s: %%(message)s',# Due to how ConfigParser works, double your %'s to escape them properly. It will look weird in the .ini but should read fine.
+    "date_format": '%%Y/%%m/%%d %%I:%%M:%%S %%p',# Due to how ConfigParser works, double your %'s to escape them properly. It will look weird in the .ini but should read fine.
+#    "frequency": "Every"
+    "frequency": "On_Change"
+#    "frequency": "On_Panic"
+}
+
+#Write the above sections to config.ini file
+with open('config.ini', 'w') as conf:
+    config_object.write(conf)
+    print("Configuration file successfully written")
