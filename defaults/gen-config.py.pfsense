@@ -1,4 +1,4 @@
-#!/usr/bin/python3
+#!/usr/local/bin/python3.8
 ##
 ## config_gen.py
 ##
@@ -14,27 +14,27 @@ config_object = ConfigParser()
 # defining system info, including OS and hardware platform type
 config_object["system_info"] = {
 ### system_os is the operating system this script is running on. Will determine how certain temperature detection is run.
-    "system_os": "Proxmox",
+#    "system_os": "Proxmox",
 #    "system_os": "TrueNAS",
-#    "system_os": "pfSense",
+    "system_os": "pfSense",
 ## ipmi_type is the hardware platform. Will determine how ipmitool raw commands are executed.
-    "ipmi_type": "iDRAC_Gen08",
-#    "ipmi_type": "SM_X10",
+#    "ipmi_type": "iDRAC_Gen08",
+    "ipmi_type": "SM_X10",
 ## single_zone is a boolean to define if the fan zones should be treated as linked or not. Depends on chassis/fan zone layout.
     "single_zone": True,
 #    "single_zone": False,
 ## disk_list is the list of disks to monitor. da# is FreeBSD based, sdX is debian based
-#    "disks": ["da0", "da1", "da2", "da3", "da4", "da5", "da6", "da7", "da8", "da9", "da10", "da11", "da12", "da13"],
-    "disks": ["sda", "sdb", "sdc", "sdd", "sde", "sdf", "sdg", "sdh", "sdi", "sdj"],
+    "disks": ["da0", "da1", "da2", "da3", "da4", "da5", "da6", "da7", "da8", "da9", "da10", "da11", "da12", "da13"],
+#    "disks": ["sda", "sdb", "sdc", "sdd", "sde", "sdf", "sdg", "sdh", "sdi", "sdj"],
 }
 
 ### Fan Curve(s)
 # left (the key) is detected temperate, right (the value) is the fan speed percentage
 config_object["fan_curve"] = {
     "cpu": [
-        [0, 20],
-        [25, 25],
-        [35, 25],
+        [0, 0],
+        [25, 20],
+        [35, 20],
         [40, 25],
         [45, 30],
         [50, 40],
@@ -45,15 +45,15 @@ config_object["fan_curve"] = {
         [100, 100],
     ],
     "hdd": [
-        [0, 20],
-        [25, 25],
+        [0, 0],
+        [25, 20],
         [35, 25],
-        [40, 25],
-        [45, 30],
+        [40, 30],
+        [45, 35],
         [50, 40],
         [60, 50],
-        [70, 60],
-        [80, 100],
+        [70, 70],
+        [80, 80],
         [90, 100],
         [100, 100],
     ],
@@ -62,7 +62,7 @@ config_object["fan_curve"] = {
 # Desired maximum HDD temp, and how much fan speed percentage to add if reached
 config_object["hdd_panic"] = {
     "max_temp": 42,
-    "panic_addition": 10
+    "panic_addition": 15
 }
 
 # timers, in seconds, for how frequently to check the temperatures and adjust fan speeds if needed

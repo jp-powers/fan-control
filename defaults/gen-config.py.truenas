@@ -1,4 +1,4 @@
-#!/usr/local/bin/python3.8
+#!/usr/local/bin/python3
 ##
 ## config_gen.py
 ##
@@ -15,8 +15,8 @@ config_object = ConfigParser()
 config_object["system_info"] = {
 ### system_os is the operating system this script is running on. Will determine how certain temperature detection is run.
 #    "system_os": "Proxmox",
-#    "system_os": "TrueNAS",
-    "system_os": "pfSense",
+    "system_os": "TrueNAS",
+#    "system_os": "pfSense",
 ## ipmi_type is the hardware platform. Will determine how ipmitool raw commands are executed.
 #    "ipmi_type": "iDRAC_Gen08",
     "ipmi_type": "SM_X10",
@@ -35,19 +35,6 @@ config_object["fan_curve"] = {
         [0, 0],
         [25, 20],
         [35, 20],
-        [40, 20],
-        [45, 20],
-        [50, 30],
-        [60, 50],
-        [70, 60],
-        [80, 70],
-        [85, 70],
-        [90, 100],
-    ],
-    "hdd": [
-        [0, 20],
-        [25, 25],
-        [35, 25],
         [40, 25],
         [45, 30],
         [50, 40],
@@ -57,12 +44,25 @@ config_object["fan_curve"] = {
         [90, 100],
         [100, 100],
     ],
+    "hdd": [
+        [0, 0],
+        [25, 20],
+        [35, 25],
+        [40, 30],
+        [45, 35],
+        [50, 40],
+        [60, 50],
+        [70, 70],
+        [80, 80],
+        [90, 100],
+        [100, 100],
+    ],
 }
 
 # Desired maximum HDD temp, and how much fan speed percentage to add if reached
 config_object["hdd_panic"] = {
     "max_temp": 42,
-    "panic_addition": 10
+    "panic_addition": 15
 }
 
 # timers, in seconds, for how frequently to check the temperatures and adjust fan speeds if needed

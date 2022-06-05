@@ -2,7 +2,6 @@
 
 PIDFILE="/root/fan-control/fan-control.pid"
 
-
 # This file provides start, stop, and restart options for fan-control.py
 
 name=fan-control

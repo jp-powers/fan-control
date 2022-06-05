@@ -1,5 +1,12 @@
 #!/bin/sh
 
+# So all loops can run with sudo the script itself should be run as sudo.
+# If not, potentially long write times could leave disks at idle for long stretches while waiting for sudo password.
+if [ "$EUID" -ne 0 ]; then
+        echo "Please run as root"
+        exit
+fi
+
 echo "What OS are you running on?"
 echo "1 = TrueNAS CORE"
 echo "2 = Proxmox"
@@ -11,6 +18,9 @@ case $USER_OS in
     3) echo "You Selected pfSense" ;;
     *) echo "You didn't enter a proper selection, try again please." ;;
 esac
+
+echo "If you selected incorrectly, Ctrl+C now in next 5 seconds!"
+sleep 5
 
 if [ "$USER_OS" = "1" ]; then
     echo "Stopping the script now."
@@ -48,5 +58,4 @@ if [ "$USER_OS" = "3" ]; then
     echo "You are now stopped and it won't auto start on boot. If you'd like, run the following command to remove:"
     echo "rm -r /root/fan-control/"
 fi
-
 
