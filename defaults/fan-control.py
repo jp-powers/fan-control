@@ -71,7 +71,7 @@ def get_hdd_temp(disk_list): # this feels like a silly way to do it but it works
     hdd_temps_list = []
 
     for disk_dev in disk_list: # iterate thru the list of drives to monitor
-        hdd_temps_cmd = "smartctl -A /dev/" + disk_dev + " | grep Temperature_Celsius" # define command to find the HDD temps by device
+        hdd_temps_cmd = "smartctl -A /dev/" + disk_dev + " | grep '194 Temp'" # define command to find the HDD temps by device
         smartctl_output.append(str(subprocess.check_output(hdd_temps_cmd, shell=True))) # run the command, dump to raw output list
     for disk in smartctl_output: # convert output to just temps
         # almost certainly a smarter way to do this...
