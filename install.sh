@@ -11,7 +11,7 @@ TRUENASSHEBANG="#!/usr/local/bin/python3"
 PROXMOXSHEBANG="#!/usr/bin/python3"
 PFSENSESHEBANG="#!/usr/local/bin/python3.8"
 
-function check_script_exec () {
+check_script_exec () {
     if [ $(stat -c "%a" /root/fan-control/gen-config.py) = "755" ]; then
         echo "gen-config.py has proper permissions"
     else
