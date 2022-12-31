@@ -11,6 +11,21 @@ TRUENASSHEBANG="#!/usr/local/bin/python3"
 PROXMOXSHEBANG="#!/usr/bin/python3"
 PFSENSESHEBANG="#!/usr/local/bin/python3.8"
 
+function check_script_exec () {
+    if [ $(stat -c "%a" /root/fan-control/gen-config.py) = "755" ]; then
+        echo "gen-config.py has proper permissions"
+    else
+        echo "gen-config.py did not get proper permissions, please manually run the following!"
+        echo "chmod 755 /root/fan-control/gen-config.py"
+    fi
+    if [ $(stat -c "%a" /root/fan-control/fan-control.py) = "755" ]; then
+        echo "fan-control.py has proper permissions"
+    else
+        echo "fan-control.py did not get proper permissions, please manually run the following!"
+        echo "chmod 755 /root/fan-control/fan-control.py"
+    fi
+}
+
 echo "What OS are you installing on?"
 echo "1 = TrueNAS CORE"
 echo "2 = Proxmox"
@@ -38,6 +53,7 @@ if [ "$USER_OS" = "1" ]; then
     cp /root/fan-control/defaults/fan-control.sh /root/fan-control/fan-control.sh
     echo "making appropriate files executable"
     chmod 755 /root/fan-control/gen-config.py /root/fan-control/fan-control.py /root/fan-control/fan-control.sh
+    check_script_exec
     echo "Starting nano to edit the config file generator that now. Ctrl+X when complete to save and exit."
     echo "(sleeping for 10 seconds to cancel if wanted)"
     sleep 10
@@ -59,6 +75,8 @@ if [ "$USER_OS" = "1" ]; then
 fi
 
 if [ "$USER_OS" = "2" ]; then
+    echo "installing requirements via apt. If already installed apt will skip on it's own."
+    apt install ipmitool lm-sensors
     echo "creating fan-control.py"
     echo $PROXMOXSHEBANG > /root/fan-control/fan-control.py
     cat /root/fan-control/defaults/fan-control.py | tail -n+2>> /root/fan-control/fan-control.py
@@ -70,6 +88,7 @@ if [ "$USER_OS" = "2" ]; then
     cp /root/fan-control/defaults/fan-control.service /root/fan-control/fan-control.service
     echo "making appropriate files executable"
     chmod 755 /root/fan-control/gen-config.py /root/fan-control/fan-control.py
+    check_script_exec
     echo "Starting nano to edit the config file generator that now. Ctrl+X when complete to save and exit."
     echo "(sleeping for 10 seconds to cancel if wanted)"
     sleep 10
@@ -100,6 +119,7 @@ if [ "$USER_OS" = "3" ]; then
     cp /root/fan-control/defaults/fan-control.sh /root/fan-control/fan-control.sh
     echo "making appropriate files executable"
     chmod 755 /root/fan-control/gen-config.py /root/fan-control/fan-control.py /root/fan-control/fan-control.sh
+    check_script_exec
     echo "Starting nano to edit the config file generator that now. Ctrl+X when complete to save and exit."
     echo "(sleeping for 10 seconds to cancel if wanted)"
     sleep 10
