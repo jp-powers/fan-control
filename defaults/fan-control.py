@@ -67,20 +67,13 @@ def get_cpu_temp(op_sys):
 def get_hdd_temp(disk_list): # this feels like a silly way to do it but it works I guess
     # create output list for smartctl run(s) and hdd_temps list, then get the HDD temps into list
     smartctl_output = []
-    hdd_temps = []
-    hdd_temps_list = []
 
     for disk_dev in disk_list: # iterate thru the list of drives to monitor
-        hdd_temps_cmd = "smartctl -A /dev/" + disk_dev + " | grep '194 Temp'" # define command to find the HDD temps by device
-        smartctl_output.append(str(subprocess.check_output(hdd_temps_cmd, shell=True))) # run the command, dump to raw output list
-    for disk in smartctl_output: # convert output to just temps
-        # almost certainly a smarter way to do this...
-        hdd_temps.append(disk[40:42]) # takes each entry of smartctl_output, grabs the text of the output for the temp, appends it to hdd_temps
-    for disk in hdd_temps: # take hdd_temps and create list for iterating on
-        hdd_temps_list.append(int(disk))
+        hdd_temps_cmd = "smartctl -A /dev/" + disk_dev + " | grep '^194 Temp' | awk '{print $10}'" # define command to find the HDD temps by device
+        smartctl_output.append(int(subprocess.check_output(hdd_temps_cmd, shell=True))) # run the command, dump to raw output list
 
-    hdd_avg_temp = sum(hdd_temps_list) / len(hdd_temps_list) # run a quick average of the data
-    hdd_max_temp = max(hdd_temps_list) # find the highest temp disk
+    hdd_avg_temp = sum(smartctl_output) / len(smartctl_output) # run a quick average of the data
+    hdd_max_temp = max(smartctl_output) # find the highest temp disk
     return [round(hdd_avg_temp,2), hdd_max_temp]
 
 def get_cpu_zone_speed(temp,cpu_fan_curve): # based on the fan curve, decide what the appropriate fan power level (fan speed) should be, return it as an integer.
