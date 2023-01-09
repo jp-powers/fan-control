@@ -5,7 +5,7 @@ It includes a means of running as a service, including reading the configuration
 
 # Some explanation is required
 
-There are a number of specific tools like this for each of the platforms, but I've been unsatisified with most and the one I do like was in Ruby, which isn't quite as cross-platform as I'd like. I recreated the script in Python, added a means of checking HDD temps, and then made necessary changes depending on platform for checking things like CPU temps and whatnot.
+There are a number of specific tools like this for each of the platforms, but I've been unsatisfied with most and the one I do like was in Ruby, which isn't quite as cross-platform as I'd like. I recreated the script in Python, added a means of checking HDD temps, and then made necessary changes depending on platform for checking things like CPU temps and whatnot.
 
 There are a number of areas that, in my incredibly amateur opinion, are incredibly amateur. My goal for sharing it is to hopefully get it out there so those with a better understanding of these platforms and Python can take it and make it better. If not, hey, I know it works (or at least it seems to work) for me.
 
@@ -77,6 +77,16 @@ Executing the following command will restart the service. This may be necessary 
     # nohup /root/fan-control/fan-control.sh restart &
 
 # TODO
+
+In practice I've found that my TrueNAS CORE/pfSense rc.d services are not working fully as intended. I need to do some more investigation into how to do so properly. That said, the above commands for start/stop/restart do work independently from what I can tell.
+
+I'd like to add a method for separating HDD and SSD temperatures and comparing appropariately. Mostly, I find that my current SK Hynix SSDs have a tendency to shoot up in temp briefly which causes annoying jumps in fan speed in bursts during things like monthly SMART Extended tests.
+
+I'm hoping to find some time to rework the timing mechanics. Right now the script is essentially working as an "iterate/sleep timer" and while it works well enough for my needs it'll get riskier if the CPU timer is changes significantly. I have a rough idea of how to convert from the current mechanism to a "compare against the system clock" method but haven't had a chance to sit down and explore it further.
+
+I ran into this issue briefly: When swapping drives (during a drive failure requiring a replacement swap for instance), the script crashed because a device it searched for was no longer there. With the changes to provide Python error logs to the fan-control.log the problem goes away mostly (the infinite loop is far more infinite), it also bloats the log wildly. I have an idea for doing an automated check for drives periodically, possibly triggered by such an error, so such issues are unlikely to occur.
+
+The log as is mostly exists to help you understand what is causing bursts of higher speed. I'd like to spend some time at some point expanding on the logging. Specifically, in my experience, there are specific drives that will trigger the max temp, and writing out which drive it is would be helpful. Possibly also at a user specified frequency writing out a chart of drive temps would be helpful.
 
 I'd like to reach a point where this is less monolithic and more modular. I'd like a means of detecting OS, potentially detecting the IPMI platform, and having individual modular components for each so it can grow/add platforms and OSs more easily. Some of this I know I could do now, but as is for just 2 IPMI platforms and 3 OS's (two of which are almost identical) I know how I'm doing things now works well enough.
 

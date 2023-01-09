@@ -23,6 +23,9 @@ config_object["system_info"] = {
 ## single_zone is a boolean to define if the fan zones should be treated as linked or not. Depends on chassis/fan zone layout.
     "single_zone": True,
 #    "single_zone": False,
+## temp_focus is a selector for which temperatures matter to you: CPU or Both. Selecting CPU will IGNORE HDD temperatures, both checks both CPU and HDD temps.
+    "temp_focus": "CPU",
+#    "temp_focus": "Both",
 ## disk_list is the list of disks to monitor. da# is FreeBSD based, sdX is debian based
     "disks": ["da0", "da1", "da2", "da3", "da4", "da5", "da6", "da7", "da8", "da9", "da10", "da11", "da12", "da13"],
 #    "disks": ["sda", "sdb", "sdc", "sdd", "sde", "sdf", "sdg", "sdh", "sdi", "sdj"],
@@ -35,7 +38,7 @@ config_object["fan_curve"] = {
         [0, 0],
         [25, 20],
         [35, 20],
-        [40, 25],
+        [40, 20],
         [45, 30],
         [50, 40],
         [60, 50],

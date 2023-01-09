@@ -165,6 +165,7 @@ while True: # This is a service so it needs to run forever... so... lets make an
             operating_system = config_object["system_info"]["system_os"]
             hardware_platform = config_object["system_info"]["ipmi_type"]
             fan_control_linked = config_object["system_info"].getboolean("single_zone")
+            control_focus = config_object["system_info"]["temp_focus"]
             hdd_to_monitor = ast.literal_eval(config_object["system_info"]["disks"])
             ## fan curve
             cpu_fan_curve = ast.literal_eval(config_object["fan_curve"]["cpu"])
@@ -198,7 +199,7 @@ while True: # This is a service so it needs to run forever... so... lets make an
 
             """.format(os=operating_system,plat=hardware_platform,link=fan_control_linked,drives=hdd_to_monitor,cpu_curve=cpu_fan_curve,hdd_curve=hdd_fan_curve,hmax=hdd_max_temp,addition=hdd_max_temp_addition,freq=log_frequency))
 
-        if operating_system == "pfSense": # pfSense routers shouldn't really care about the HDD temps, so skip all that stuff and just do CPU loops
+        if control_focus == "CPU":
             current_cpu_temp = get_cpu_temp(operating_system) #get current CPU average temp
             current_cpu_fan_speed = get_cpu_zone_speed(current_cpu_temp,cpu_fan_curve) # get what the fan speed should be based on above temp
             if log_frequency == "Every":
@@ -211,7 +212,7 @@ while True: # This is a service so it needs to run forever... so... lets make an
                     set_cpu_zone_fan_speed(current_cpu_fan_speed) # set the fan speed
             if log_frequency == "On_Panic":
                 set_cpu_zone_fan_speed(current_cpu_fan_speed) # set the fan speed
-        if operating_system != "pfSense":
+        if control_focus == "Both":
             if fan_control_linked is True:
                 current_cpu_temp = get_cpu_temp(operating_system) #get current average temp
                 current_cpu_fan_speed = get_cpu_zone_speed(current_cpu_temp,cpu_fan_curve) # get what the fan speed should be based on above temp
