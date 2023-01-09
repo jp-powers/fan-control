@@ -58,4 +58,3 @@ if [ "$USER_OS" = "3" ]; then
     echo "You are now stopped and it won't auto start on boot. If you'd like, run the following command to remove:"
     echo "rm -r /root/fan-control/"
 fi
-

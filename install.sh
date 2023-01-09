@@ -12,17 +12,32 @@ PROXMOXSHEBANG="#!/usr/bin/python3"
 PFSENSESHEBANG="#!/usr/local/bin/python3.8"
 
 check_script_exec () {
-    if [ $(stat -c "%a" /root/fan-control/gen-config.py) = "755" ]; then
-        echo "gen-config.py has proper permissions"
+    if [ "$1" = "2" ]; then
+            if [ $(stat -c "%a" /root/fan-control/gen-config.py) = "755" ]; then
+                echo "gen-config.py has proper permissions"
+            else
+                echo "gen-config.py did not get proper permissions, please manually run the following!"
+                echo "chmod 755 /root/fan-control/gen-config.py"
+            fi
+            if [ $(stat -c "%a" /root/fan-control/fan-control.py) = "755" ]; then
+                echo "fan-control.py has proper permissions"
+            else
+                echo "fan-control.py did not get proper permissions, please manually run the following!"
+                echo "chmod 755 /root/fan-control/fan-control.py"
+            fi
     else
-        echo "gen-config.py did not get proper permissions, please manually run the following!"
-        echo "chmod 755 /root/fan-control/gen-config.py"
-    fi
-    if [ $(stat -c "%a" /root/fan-control/fan-control.py) = "755" ]; then
-        echo "fan-control.py has proper permissions"
-    else
-        echo "fan-control.py did not get proper permissions, please manually run the following!"
-        echo "chmod 755 /root/fan-control/fan-control.py"
+            if [ $(stat -f "%0Lp" /root/fan-control/gen-config.py) = "755" ]; then
+                echo "gen-config.py has proper permissions"
+            else
+                echo "gen-config.py did not get proper permissions, please manually run the following!"
+                echo "chmod 755 /root/fan-control/gen-config.py"
+            fi
+            if [ $(stat -f "%0Lp" /root/fan-control/fan-control.py) = "755" ]; then
+                echo "fan-control.py has proper permissions"
+            else
+                echo "fan-control.py did not get proper permissions, please manually run the following!"
+                echo "chmod 755 /root/fan-control/fan-control.py"
+            fi
     fi
 }
 
@@ -53,7 +68,7 @@ if [ "$USER_OS" = "1" ]; then
     cp /root/fan-control/defaults/fan-control.sh /root/fan-control/fan-control.sh
     echo "making appropriate files executable"
     chmod 755 /root/fan-control/gen-config.py /root/fan-control/fan-control.py /root/fan-control/fan-control.sh
-    check_script_exec
+    check_script_exec $USER_OS
     echo "Starting nano to edit the config file generator that now. Ctrl+X when complete to save and exit."
     echo "(sleeping for 10 seconds to cancel if wanted)"
     sleep 10
@@ -88,7 +103,7 @@ if [ "$USER_OS" = "2" ]; then
     cp /root/fan-control/defaults/fan-control.service /root/fan-control/fan-control.service
     echo "making appropriate files executable"
     chmod 755 /root/fan-control/gen-config.py /root/fan-control/fan-control.py
-    check_script_exec
+    check_script_exec $USER_OS
     echo "Starting nano to edit the config file generator that now. Ctrl+X when complete to save and exit."
     echo "(sleeping for 10 seconds to cancel if wanted)"
     sleep 10
@@ -119,7 +134,7 @@ if [ "$USER_OS" = "3" ]; then
     cp /root/fan-control/defaults/fan-control.sh /root/fan-control/fan-control.sh
     echo "making appropriate files executable"
     chmod 755 /root/fan-control/gen-config.py /root/fan-control/fan-control.py /root/fan-control/fan-control.sh
-    check_script_exec
+    check_script_exec $USER_OS
     echo "Starting nano to edit the config file generator that now. Ctrl+X when complete to save and exit."
     echo "(sleeping for 10 seconds to cancel if wanted)"
     sleep 10
