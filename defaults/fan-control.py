@@ -200,18 +200,32 @@ while True: # This is a service so it needs to run forever... so... lets make an
             """.format(os=operating_system,plat=hardware_platform,link=fan_control_linked,drives=hdd_to_monitor,cpu_curve=cpu_fan_curve,hdd_curve=hdd_fan_curve,hmax=hdd_max_temp,addition=hdd_max_temp_addition,freq=log_frequency))
 
         if control_focus == "CPU":
-            current_cpu_temp = get_cpu_temp(operating_system) #get current CPU average temp
-            current_cpu_fan_speed = get_cpu_zone_speed(current_cpu_temp,cpu_fan_curve) # get what the fan speed should be based on above temp
-            if log_frequency == "Every":
-                logging.info("CPU Temp: {temp}C -> Fans: {fan_speed}".format(temp=current_cpu_temp,fan_speed=current_cpu_fan_speed)) # For each loop, write the temp then the proposed fan speed
-                set_cpu_zone_fan_speed(current_cpu_fan_speed) # set the fan speed
-            if log_frequency == "On_Change":
-                if current_cpu_fan_speed > last_cpu_fan_speed or current_cpu_fan_speed < last_cpu_fan_speed:
-                    last_cpu_fan_speed = current_cpu_fan_speed
+            if fan_control_linked is True:
+                current_cpu_temp = get_cpu_temp(operating_system) #get current CPU average temp
+                current_cpu_fan_speed = get_cpu_zone_speed(current_cpu_temp,cpu_fan_curve) # get what the fan speed should be based on above temp
+                if log_frequency == "Every":
+                    logging.info("CPU Temp: {temp}C -> Fans: {fan_speed}".format(temp=current_cpu_temp,fan_speed=current_cpu_fan_speed)) # For each loop, write the temp then the proposed fan speed
+                    set_linked_zone_fan_speed(platform, speed)(current_cpu_fan_speed) # set the fan speed
+                if log_frequency == "On_Change":
+                    if current_cpu_fan_speed > last_cpu_fan_speed or current_cpu_fan_speed < last_cpu_fan_speed:
+                        last_cpu_fan_speed = current_cpu_fan_speed
+                        logging.info("CPU Temp: {temp}C -> Fans: {fan_speed}".format(temp=current_cpu_temp,fan_speed=current_cpu_fan_speed)) # For each loop, write the temp then the proposed fan speed
+                        set_linked_zone_fan_speed(platform, speed)(current_cpu_fan_speed) # set the fan speed
+                if log_frequency == "On_Panic":
+                    set_linked_zone_fan_speed(platform, speed)(current_cpu_fan_speed) # set the fan speed
+            else: # if Fan Zones are not linked
+                current_cpu_temp = get_cpu_temp(operating_system) #get current CPU average temp
+                current_cpu_fan_speed = get_cpu_zone_speed(current_cpu_temp,cpu_fan_curve) # get what the fan speed should be based on above temp
+                if log_frequency == "Every":
                     logging.info("CPU Temp: {temp}C -> Fans: {fan_speed}".format(temp=current_cpu_temp,fan_speed=current_cpu_fan_speed)) # For each loop, write the temp then the proposed fan speed
                     set_cpu_zone_fan_speed(current_cpu_fan_speed) # set the fan speed
-            if log_frequency == "On_Panic":
-                set_cpu_zone_fan_speed(current_cpu_fan_speed) # set the fan speed
+                if log_frequency == "On_Change":
+                    if current_cpu_fan_speed > last_cpu_fan_speed or current_cpu_fan_speed < last_cpu_fan_speed:
+                        last_cpu_fan_speed = current_cpu_fan_speed
+                        logging.info("CPU Temp: {temp}C -> Fans: {fan_speed}".format(temp=current_cpu_temp,fan_speed=current_cpu_fan_speed)) # For each loop, write the temp then the proposed fan speed
+                        set_cpu_zone_fan_speed(current_cpu_fan_speed) # set the fan speed
+                if log_frequency == "On_Panic":
+                    set_cpu_zone_fan_speed(current_cpu_fan_speed) # set the fan speed
         if control_focus == "Both":
             if fan_control_linked is True:
                 current_cpu_temp = get_cpu_temp(operating_system) #get current average temp
