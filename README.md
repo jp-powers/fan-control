@@ -29,6 +29,8 @@ Depending on your setup editing the config file appropriately should just work, 
 Unzip everything into /root/fan-control
 execute the install.sh script, follow the instructions. It will copy the appropriate files for your OS, mark as executable, do what it can so things auto start on boot, open the config generator for you, execute it, and start the script.
 
+***NOTE:*** On pfSense CE versions 2.6 and older, the fan-control.py script may not run. These older versions of pfSense CE used Python 3.8 or older (depending on your CE version). CE 2.7 updated to Python 3.11 and the script reflects this. If you are on an older version of pfSense and not updating, change the shebang (first line) of fan-control.py to the version of Python you need. You can find this by running the command `ls /usr/local/bin/python*`, which will list the systems python executable you need to change to.
+
 When the config generator runs, take a look at all the options. The defaults are what I use on my respective systems, but you may desire different settings, specifically the fan curves.
 
 To uninstall, there is a matching uninstall.sh script. However, I do not script the removal of /root/fan-control, I only do what I can to stop the script and either remove the auto-start components or instruct you how to.
