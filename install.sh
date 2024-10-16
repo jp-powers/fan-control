@@ -69,10 +69,10 @@ if [ "$USER_OS" = "1" ]; then
     echo "making appropriate files executable"
     chmod 755 /root/fan-control/gen-config.py /root/fan-control/fan-control.py /root/fan-control/fan-control.sh
     check_script_exec $USER_OS
-    echo "Starting nano to edit the config file generator that now. Ctrl+X when complete to save and exit."
+    echo "Starting vi to edit the config file generated now. Ctrl+X when complete to save and exit."
     echo "(sleeping for 10 seconds to cancel if wanted)"
     sleep 10
-    nano /root/fan-control/gen-config.py
+    vi /root/fan-control/gen-config.py
     echo "Executing gen-config.py to generate the config file"
     /root/fan-control/gen-config.py
     echo "************************"
