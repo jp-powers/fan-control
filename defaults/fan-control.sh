@@ -7,14 +7,22 @@ PIDFILE="/root/fan-control/fan-control.pid"
 name=fan-control
 
 rc_start() {
+
+  if ! output=$(pgrep -F $PIDFILE 2>/dev/null)
+  then
     echo "Starting Fan Control..."
     /root/fan-control/fan-control.py & echo $! > $PIDFILE
+  else
+    echo "Fan control already running"
+  fi
+
 }
 
 rc_stop() {
     echo "Stopping Fan Control..."
     /usr/bin/pkill -F $PIDFILE
     /bin/sleep 5
+    rm $PIDFILE
 }
 
 case $1 in
