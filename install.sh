@@ -9,7 +9,7 @@ fi
 # set some variables for the python shebangs to each OS
 TRUENASSHEBANG="#!/usr/local/bin/python3"
 PROXMOXSHEBANG="#!/usr/bin/python3"
-PFSENSESHEBANG="#!/usr/local/bin/python3.8"
+PFSENSESHEBANG="#!/usr/local/bin/python3.11"
 
 check_script_exec () {
     if [ "$1" = "2" ]; then
