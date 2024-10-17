@@ -337,6 +337,27 @@ while True: # This is a service so it needs to run forever... so... lets make an
                             time.sleep(detect_hdd_temp_every) # lets sleep for a bit to give the HDDs time to chill
                     hdd_itter = 0 # reset our HDD timer
 
-        time.sleep(detect_cpu_temp_every) # wait to run again
-    except Exception as exc: # in event of a script crash, dump more data to log
+    except Exception as exc:  # in event of a script crash, dump more data to log
         logging.error("Critical error occurred!!", exc_info=True)
+
+        logging.info("Setting fans to full speed.")
+        # Set full speed
+        ## if Supermicro, set fans to full so they don't "warble" and hold at our most recent request
+        if hardware_platform == "SM_X10":
+            cmd = 'ipmitool raw 0x30 0x45 0x01 0x01'
+            subprocess.check_output(cmd, shell=True)
+            time.sleep(2)
+
+        ## if Dell, set fans to allow full manual control to stop iDRAC from trying to manage it
+        if hardware_platform == "iDRAC_Gen08":
+            cmd = 'ipmitool raw 0x30 0x30 0x01 0x00'
+            subprocess.check_output(cmd, shell=True)
+            time.sleep(2)
+    finally:
+        # Regardless of what was done above, sleep for same time
+        try:
+            logging.info(f"Sleep timer: {detect_cpu_temp_every}")
+            time.sleep(detect_cpu_temp_every)  # wait to run again
+        except:
+            logging.info("Sleep timer: 10 (default)")
+            time.sleep(10)
