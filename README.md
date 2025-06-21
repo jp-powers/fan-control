@@ -3,6 +3,10 @@
 The intent of this script package to provide a (relatively) simple means of controlling fan speed via a fan curve. It is one monolithic script to manage TrueNAS Core, pfSense, and Proxmox.
 It includes a means of running as a service, including reading the configuration regularly for changes so you can make adjustments without needing to reboot/start the script in odd ways on different platforms.
 
+## Archival notice
+
+This repo is officially entering archive status. Due to changes in my homelab environment, and limited available time to work on it versus other projects, it's time to mark as read-only.
+
 # Some explanation is required
 
 There are a number of specific tools like this for each of the platforms, but I've been unsatisfied with most and the one I do like was in Ruby, which isn't quite as cross-platform as I'd like. I recreated the script in Python, added a means of checking HDD temps, and then made necessary changes depending on platform for checking things like CPU temps and whatnot.
